@@ -1,0 +1,16 @@
+{
+  "name": "node-spotify-listenbrainz",
+  "version": "0.0.1",
+  "description": "Intercept Last.fm scrobbles from Spotify and send them to Listenbrainz",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "qs": "^6.5.0"
+  },
+  "keywords": ["node", "spotify", "listenbrainz"],
+  "author": "",
+  "license": "MIT"
+}
