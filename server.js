@@ -1,8 +1,14 @@
+/*
+See https://github.com/19379/node-spotify-listenbrainz for setup instructions
+
+Get your token here https://listenbrainz.org/user/info
+*/
+
 const token = ''; 
 
 const http = require('http');
 const https = require('https');
-const querystring = require('querystring');
+const qs = require('qs');
 const crypto = require('crypto');
 const options = {
 	host : 'api.listenbrainz.org',
@@ -21,9 +27,8 @@ http.createServer((request, response) => {
 		body.push(chunk);
 	}).on('end', () => {
 		body = Buffer.concat(body).toString();
-		let qs = querystring.parse(request.url.split("?")[1]);
-		if (qs.hs) { // client wants a handshake
-			console.log(JSON.stringify(qs, null, 4));
+		let q = qs.parse(request.url.split("?")[1]);
+		if (q.hs) { // client wants a handshake
 			let end = [
 				'OK',
 				crypto.createHash('md5').update(String(new Date().getTime())).digest('hex'),
@@ -32,31 +37,37 @@ http.createServer((request, response) => {
 			].join('\n');
 			//console.log(end);
 			response.end(end);
-		} else {
-			let o = querystring.parse(body);
-			if (o['i[0]']) {
-				let data = {
-					listen_type : 'single',
-					payload : [{
-						listened_at : o['i[0]'],
+		} else if (request.url == '/np_1.2') { // now playing notification
+			response.end('OK\n');
+		} else if (request.url == '/protocol_1.2') { // an actual scrobble
+			let o = qs.parse(body);
+			if (o.i) { // check we have a timestamp
+				let payload = [];
+				for (let i = 0; i < o.i.length; i++) {
+					payload[i] = {
+						listened_at : o.i[i],
 						track_metadata : {
-							artist_name : o['a[0]'],
-							track_name : o['t[0]'],
-							release_name : o['b[0]']
+							artist_name : o.a[i],
+							track_name : o.t[i],
+							release_name : o.b[i]
 						}
-					}]
+					};
+				}
+				
+				let data = {
+					listen_type : 'import',
+					payload : payload
 				};
 				
 				console.log('Submitting:\n' + JSON.stringify(data, null, 4));
 				
-				let post = https.request(options, (res) => {
-					console.log('Status: ' + res.statusCode);
+				let req = https.request(options, (res) => {
+					console.log('Listenbrainz server status: ' + res.statusCode);
 				})
-				post.write(JSON.stringify(data));
-				post.end();
+				req.write(JSON.stringify(data));
+				req.end();
 			}
 			response.end('OK\n');
 		}
-		
 	});
 }).listen(80);
