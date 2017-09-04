@@ -18,13 +18,14 @@ const options = {
 console.log('Listening...');
 
 http.createServer((request, response) => {
-	let body = [];
+	let body = '';
+	request.setEncoding('utf8');
+	
 	request.on('error', (err) => {
 		console.error(err);
 	}).on('data', (chunk) => {
-		body.push(chunk);
+		body += chunk;
 	}).on('end', () => {
-		body = Buffer.concat(body).toString();
 		let q = qs.parse(request.url.split("?")[1]);
 		if (q.hs) { // client wants a handshake
 			let end = [
@@ -62,6 +63,7 @@ http.createServer((request, response) => {
 				let req = https.request(options, (res) => {
 					console.log('Listenbrainz server status: ' + res.statusCode);
 				})
+				
 				req.write(JSON.stringify(data));
 				req.end();
 			}
