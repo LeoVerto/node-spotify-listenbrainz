@@ -10,7 +10,11 @@
   "dependencies": {
     "qs": "^6.5.0"
   },
-  "keywords": ["node", "spotify", "listenbrainz"],
+  "keywords": [
+    "node",
+    "spotify",
+    "listenbrainz"
+  ],
   "author": "",
   "license": "MIT"
 }

@@ -1,23 +1,21 @@
-/*
-See https://github.com/19379/node-spotify-listenbrainz for setup instructions
-
-Get your token here https://listenbrainz.org/user/info
-*/
-
-const token = ''; 
+// See https://github.com/19379/node-spotify-listenbrainz for setup instructions
 
 const http = require('http');
 const https = require('https');
 const qs = require('qs');
 const crypto = require('crypto');
+const token = require('./token.json');
+
 const options = {
 	host : 'api.listenbrainz.org',
 	path : '/1/submit-listens',
 	method: 'POST',
 	headers: {
-		'Authorization': 'Token ' + token
+		'Authorization': 'Token ' + token.token
 	}
 };
+
+console.log('Listening...');
 
 http.createServer((request, response) => {
 	let body = [];
