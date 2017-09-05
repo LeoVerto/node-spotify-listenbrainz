@@ -1,10 +1,10 @@
 # node-spotify-listenbrainz
 Intercept Last.fm scrobbles from Spotify and send them to Listenbrainz
 
-This is still a work in progress without error handling so use with caution!
-
 It goes without saying you need Spotify, Node and a Listenbrainz account. You don't need a Last.fm
 account because you can enter any old fake details in the Spotify preferences.
+
+### One time setup instructions
 
 First you need to edit your hosts file like this.
 
@@ -30,14 +30,15 @@ Obviously, replace the `abc123` with your actual Listenbrainz token. You can get
 
 https://listenbrainz.org/user/info
 
-Next, open a command prompt and run
+To install required dependencies, open a command prompt and run
 
 `npm install`
 
-Finally, you can run
+---
+
+Now that setup is complete, you should used this command to start the server before opening Spotify.
 
 `node server.js`
 
 You'll need to configure Spotify with a Last.fm username/password but these don't need to be real. Listen
 to some music and the command prompt should report the submissions/Listenbrainz server status as it goes.
-
