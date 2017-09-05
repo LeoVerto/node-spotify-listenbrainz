@@ -20,7 +20,6 @@ console.log('Listening...');
 http.createServer((request, response) => {
 	let body = '';
 	request.setEncoding('utf8');
-	
 	request.on('error', (err) => {
 		console.error(err);
 	}).on('data', (chunk) => {
@@ -61,13 +60,35 @@ http.createServer((request, response) => {
 				console.log('Submitting:\n' + JSON.stringify(data, null, 4));
 				
 				let req = https.request(options, (res) => {
-					console.log('Listenbrainz server status: ' + res.statusCode);
-				})
-				
+					let lb_body = '';
+					res.setEncoding('utf8');
+					res.on('data', (chunk) => {
+						lb_body += chunk;
+					}).on('end', () => {
+						try {
+							var lb_json = JSON.parse(lb_body);
+							if (lb_json.status == 'ok') {
+								console.log('Listen(s) submitted succesfully');
+								response.end('OK\n');
+							} else if (lb_json.code && lb_json.error) {
+								console.log('Listenbrainz error code: ' + lb_json.code);
+								console.log('Listenbrainz message: ' + lb_json.error);
+								if (lb_json.code == 400) {
+									console.log('A listen with error code 400 cannot be retried and will be lost.');
+									response.end('OK\n');
+								}
+							}
+						} catch (err) {
+							console.log(err);
+						}
+					});
+				});
 				req.write(JSON.stringify(data));
 				req.end();
+				req.on('error', (err) => {
+					console.log(err);
+				});
 			}
-			response.end('OK\n');
 		}
 	});
 }).listen(80);
