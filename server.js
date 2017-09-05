@@ -66,7 +66,7 @@ http.createServer((request, response) => {
 						lb_body += chunk;
 					}).on('end', () => {
 						try {
-							var lb_json = JSON.parse(lb_body);
+							let lb_json = JSON.parse(lb_body);
 							if (lb_json.status == 'ok') {
 								console.log('Listen(s) submitted succesfully');
 								response.end('OK\n');
