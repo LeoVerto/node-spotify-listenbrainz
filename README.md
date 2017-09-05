@@ -30,13 +30,13 @@ Obviously, replace the `abc123` with your actual Listenbrainz token. You can get
 
 https://listenbrainz.org/user/info
 
-To install required dependencies, open a command prompt and run
+To install required dependencies, open a command prompt in the containing folder and run
 
 `npm install`
 
 ---
 
-Now that setup is complete, you should used this command to start the server before opening Spotify.
+Now that setup is complete, you should use this command to start the server before opening Spotify.
 
 `node server.js`
 
