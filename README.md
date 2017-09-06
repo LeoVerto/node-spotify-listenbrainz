@@ -40,5 +40,7 @@ Now that setup is complete, you should use this command to start the server befo
 
 `node server.js`
 
+On Unix systems you may need to run the server using `sudo` as only the root user is allowed to bind to ports 0 to 1024.
+
 You'll need to configure Spotify with a Last.fm username/password but these don't need to be real. Listen
 to some music and the command prompt should report the submissions/Listenbrainz server status as it goes.
